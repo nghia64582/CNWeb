@@ -1,6 +1,7 @@
 const util = require('util');
 const mysql = require('mysql');
 const db = require('../db');
+const req = require('express/lib/request');
 
 ADD_TAG = 1;
 ADD_POST = 2;
@@ -12,6 +13,7 @@ GET_ALL_POST_WITH_TAG = 7;
 ADD_COMMENT = 8;
 DELETE_COMMENT = 9;
 DELETE_POST = 10;
+UPDATE_POST = 11;
 
 
 module.exports = {
@@ -120,11 +122,17 @@ module.exports = {
                 break;
             case DELETE_TAG:
                 // todo
+                // 2. Xóa tag có trong post (nếu có) và giữ lại post
                 break;
-            // 1 post có tag Music
-            // xóa tag Music
-            // 1. Xóa post trên
-            // 2. Xóa tag Music trong post trên và giữ lại post
+        }
+    },
+
+    update: (req, res) => {
+        let data = req.body;
+        let sql;
+        switch (data.cmd) {
+            case UPDATE_POST:
+                break;
         }
     }
 }
