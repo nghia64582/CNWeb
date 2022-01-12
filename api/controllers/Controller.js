@@ -8,8 +8,10 @@ ADD_POST_TAG = 3;
 ADD_USER = 4;
 GET_ALL_POST = 5;
 GET_ALL_CATEGORIES = 6;
-GET_ALL_POST_WITH_TAGS = 7;
+GET_ALL_POST_WITH_TAG = 7;
 ADD_COMMENT = 8;
+DELETE_COMMENT = 9;
+DELETE_POST = 10;
 
 
 module.exports = {
@@ -19,7 +21,7 @@ module.exports = {
         switch (data.cmd) {
             case GET_ALL_POST:
                 sql = "select * from posts";
-                db.query(sql, function(err, result) {
+                db.query(sql, function (err, result) {
                     if (err) throw err;
                     console.log(JSON.stringify(result));
                     res.json(result);
@@ -27,7 +29,7 @@ module.exports = {
                 break;
             case GET_ALL_CATEGORIES:
                 sql = "select * from categories";
-                db.query(sql, function(err, result) {
+                db.query(sql, function (err, result) {
                     if (err) throw err;
                     console.log(JSON.stringify(result));
                     res.json(result);
@@ -36,7 +38,12 @@ module.exports = {
             case GET_ALL_POST_WITH_TAG:
                 // todo
                 let tagName = data.tagName;
-                sql = "";
+                sql = "SELECT posttag.postID, posttag.tagID, categories.tagName, posts.title, posts.slug, posts.excerpt, posts.content FROM cnweb.posttag, cnweb.categories, cnweb.posts where posttag.postID=posts.postID and posttag.tagID=categories.tagID and '" + tagName + "'=categories.tagName;";
+                db.query(sql, function(err, result){
+                    if(err) throw err;
+                    console.log(JSON.stringify(result));
+                    res.json(result);
+                });
                 break;
         }
     },
@@ -47,7 +54,7 @@ module.exports = {
         switch (data.cmd) {
             case ADD_TAG:
                 sql = "insert into Categories (tagName) values ('" + data.tagName + "');";
-                db.query(sql, function(err, result) {
+                db.query(sql, function (err, result) {
                     if (err) throw err;
                     console.log("Added to table.");
                 });
@@ -58,9 +65,9 @@ module.exports = {
                 let title = data.title;
                 let content = data.content;
                 let slug = getSlug(title);
-                sql = "insert into Posts (excerpt, title, content, slug) values ('" + excerpt 
+                sql = "insert into Posts (excerpt, title, content, slug) values ('" + excerpt
                     + "', '" + title + "', '" + content + "', '" + slug + "');"
-                db.query(sql, function(err, result) {
+                db.query(sql, function (err, result) {
                     if (err) throw err;
                     console.log("Added to table.");
                 });
@@ -69,20 +76,56 @@ module.exports = {
                 let postID = data.postID;
                 let tagID = data.tagID;
                 sql = "insert into PostTag values (" + postID + "," + tagID + ")";
-                db.query(sql, function(err, result) {
+                db.query(sql, function (err, result) {
                     if (err) throw err;
                     console.log("Added to table.");
                 });
                 break;
             case ADD_USER:
-                // todo
+                let username = data.username;
+                let email = data.email;
+                let pw = data.password;
+                let role = data.isAdmin;
+                sql = "insert into users (username, password, isAdmin, email) values ('"+username+"','"+pw+"',"+role+",'"+email+"');";
+                db.query(sql, function(err, result){
+                    if(err) throw err;
+                    console.log("Add to table users");
+                })
                 break;
             case ADD_COMMENT:
                 // todo
                 console.log(req.id);
+                let cmt = data.content;
+                let postId = data.postID;
+                let email_cmt = data.email;
+                sql = "insert into comments (postID, content, email) values ('"+postId+"','"+cmt+"','"+email_cmt+"');";
+                db.query(sql, function(err, result){
+                    if(err) throw err;
+                    console.log("Added to table comments");
+                });
                 break;
         }
         res.send("POST SUCCESS");
+    },
+
+    delete: (req, res) => {
+        let data = req.body;
+        let sql;
+        switch (data.cmd) {
+            case DELETE_COMMENT:
+                // todo
+                break;
+            case DELETE_POST:
+                // todo
+                break;
+            case DELETE_TAG:
+                // todo
+                break;
+            // 1 post có tag Music
+            // xóa tag Music
+            // 1. Xóa post trên
+            // 2. Xóa tag Music trong post trên và giữ lại post
+        }
     }
 }
 
@@ -96,5 +139,6 @@ function getSlug(str) {
     str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
     str = str.replace(/đ/g, "d");
     str = str.replace(/ /g, "_");
+    str = str.replaceAll(" ", "_");
     return str;
 }
