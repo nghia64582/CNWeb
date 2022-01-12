@@ -22,6 +22,7 @@ module.exports = {
                 db.query(sql, function(err, result) {
                     if (err) throw err;
                     console.log(JSON.stringify(result));
+                    res.json(result);
                 });
                 break;
             case GET_ALL_CATEGORIES:
