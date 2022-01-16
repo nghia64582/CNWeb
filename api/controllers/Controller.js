@@ -10,6 +10,7 @@ GET_ALL_POST = 5;
 GET_ALL_CATEGORIES = 6;
 GET_ALL_POST_WITH_TAG = 7;
 ADD_COMMENT = 8;
+GET_ONE_POST = 9;
 
 
 module.exports = {
@@ -36,6 +37,15 @@ module.exports = {
                 // todo
                 let tagName = data.tagName;
                 sql = "SELECT posttag.postID, posttag.tagID, categories.tagName, posts.title, posts.slug, posts.excerpt, posts.content FROM cnweb.posttag, cnweb.categories, cnweb.posts where posttag.postID=posts.postID and posttag.tagID=categories.tagID and "+tagName+"=categories.tagName;";
+                db.query(sql, function(err, result){
+                    if(err) throw err;
+                    console.log(JSON.stringify(result));
+                    res.json(result);
+                });
+                break;
+            case GET_ONE_POST:
+                let post_id = data.postID;
+                sql = "select * from posts where posts.postID = '"+post_id+"';";
                 db.query(sql, function(err, result){
                     if(err) throw err;
                     console.log(JSON.stringify(result));

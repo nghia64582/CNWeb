@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cors())
 
-let routes = require('./api/routes')
+let routes = require('./api/routes/routes')
 routes(app)
 
 app.use(function(req, res) {
