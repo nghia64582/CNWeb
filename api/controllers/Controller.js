@@ -1,6 +1,7 @@
 const util = require('util');
 const mysql = require('mysql');
 const db = require('../db');
+const req = require('express/lib/request');
 
 ADD_TAG = 1;
 ADD_POST = 2;
@@ -11,6 +12,9 @@ GET_ALL_CATEGORIES = 6;
 GET_ALL_POST_WITH_TAG = 7;
 ADD_COMMENT = 8;
 GET_ONE_POST = 9;
+DELETE_COMMENT = 9;
+DELETE_POST = 10;
+UPDATE_POST = 11;
 
 
 module.exports = {
@@ -23,6 +27,7 @@ module.exports = {
                 db.query(sql, function (err, result) {
                     if (err) throw err;
                     console.log(JSON.stringify(result));
+                    res.json(result);
                 });
                 break;
             case GET_ALL_CATEGORIES:
@@ -36,7 +41,7 @@ module.exports = {
             case GET_ALL_POST_WITH_TAG:
                 // todo
                 let tagName = data.tagName;
-                sql = "SELECT posttag.postID, posttag.tagID, categories.tagName, posts.title, posts.slug, posts.excerpt, posts.content FROM cnweb.posttag, cnweb.categories, cnweb.posts where posttag.postID=posts.postID and posttag.tagID=categories.tagID and "+tagName+"=categories.tagName;";
+                sql = "SELECT posttag.postID, posttag.tagID, categories.tagName, posts.title, posts.slug, posts.excerpt, posts.content FROM cnweb.posttag, cnweb.categories, cnweb.posts where posttag.postID=posts.postID and posttag.tagID=categories.tagID and '" + tagName + "'=categories.tagName;";
                 db.query(sql, function(err, result){
                     if(err) throw err;
                     console.log(JSON.stringify(result));
@@ -100,6 +105,8 @@ module.exports = {
                 })
                 break;
             case ADD_COMMENT:
+                // todo
+                console.log(req.id);
                 let cmt = data.content;
                 let postId = data.postID;
                 let email_cmt = data.email;
@@ -107,10 +114,36 @@ module.exports = {
                 db.query(sql, function(err, result){
                     if(err) throw err;
                     console.log("Added to table comments");
-                })
+                });
                 break;
         }
         res.send("POST SUCCESS");
+    },
+
+    delete: (req, res) => {
+        let data = req.body;
+        let sql;
+        switch (data.cmd) {
+            case DELETE_COMMENT:
+                // todo
+                break;
+            case DELETE_POST:
+                // todo
+                break;
+            case DELETE_TAG:
+                // todo
+                // 2. Xóa tag có trong post (nếu có) và giữ lại post
+                break;
+        }
+    },
+
+    update: (req, res) => {
+        let data = req.body;
+        let sql;
+        switch (data.cmd) {
+            case UPDATE_POST:
+                break;
+        }
     }
 }
 
@@ -123,6 +156,7 @@ function getSlug(str) {
     str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
     str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
     str = str.replace(/đ/g, "d");
+    str = str.replace(/ /g, "_");
     str = str.replaceAll(" ", "_");
     return str;
 }
