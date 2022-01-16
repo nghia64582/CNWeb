@@ -4,7 +4,7 @@ const db = require('../db');
 
 exports.getItem = async (req, res) => {
     try {
-        const data = req.body;
+        const data = req.params;
         let post_id = data.postID;
         const sql = "select * from posts where posts.postID = '"+post_id+"';";
         db.query(sql, function(err, result){
