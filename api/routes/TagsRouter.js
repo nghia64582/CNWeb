@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', tagsCtrler.getAll);
 // router.get('/:tagID',tagsCtrler.getItem);
-router.get('/:tagID',tagsCtrler.getPostsByTag);
+router.get('/:tagID/posts',tagsCtrler.getPostsByTag);
 router.post('/create',tagsCtrler.createNewTag);
 
 module.exports = router;

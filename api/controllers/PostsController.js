@@ -39,7 +39,7 @@ function getSlug(str) {
     str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
     str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
     str = str.replace(/đ/g, "d");
-    str = str.replaceAll(" ", "_");
+    str = str.replaceAll(" ", "-");
     return str;
 }
 
@@ -59,5 +59,16 @@ exports.createNewPost = async(req, res) => {
         res.send("POST SUCCESSFUL");
     } catch(err){
         res.send(err);
+    }
+}
+
+exports.deleteOnePost = async(req, res) => {
+    let data = req.body;
+    try{
+        const postID = data.postID;
+        const sql = "delete from posts where "+postID+" = postID;";
+        res.send("DELETE SUCCESSFUL");
+    } catch (err) {
+        res.send(err)
     }
 }
