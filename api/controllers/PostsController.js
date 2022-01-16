@@ -61,3 +61,16 @@ exports.createNewPost = async(req, res) => {
         res.send(err);
     }
 }
+
+exports.deletePost = async(req, res) => {
+    let data = req.body;
+    try {
+        let sql = "DELETE FROM posts WHERE postID = " + data.postID;
+        db.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log("Post is deleted.");
+        });
+    } catch (err) {
+        res.send(err);
+    }
+}
