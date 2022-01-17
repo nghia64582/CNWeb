@@ -7,5 +7,6 @@ router.get('/', tagsCtrler.getAll);
 // router.get('/:tagID',tagsCtrler.getItem);
 router.get('/:tagID/posts',tagsCtrler.getPostsByTag);
 router.post('/create',tagsCtrler.createNewTag);
+router.delete('/:tagID/delete', tagsCtrler.deleteOneTag);
 
 module.exports = router;

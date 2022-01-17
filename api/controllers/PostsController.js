@@ -62,13 +62,44 @@ exports.createNewPost = async(req, res) => {
     }
 }
 
+exports.addPostTag = async(req, res) => {
+    let data = req.params;
+    try{
+        let postID = data.postID;
+        let tagID = data.tagID;
+        sql = "insert into PostTag values (" + postID + "," + tagID + ")";
+        db.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log("Added to table.");
+        });
+        res.send("POST SUCCESSFUL");
+    } catch(err){
+        res.send(err);
+    }    
+}
+
 exports.deleteOnePost = async(req, res) => {
-    let data = req.body;
+    let data = req.params;
     try{
         const postID = data.postID;
         const sql = "delete from posts where "+postID+" = postID;";
         res.send("DELETE SUCCESSFUL");
     } catch (err) {
         res.send(err)
+    }
+}
+
+exports.getTagsPost = async(req, res) => {
+    let data = req.params;
+    try{
+        const postid = data.postID;
+        const sql = "select categories.tagName, posts.postID from categories, posts, posttag where posttag.postID = "+postid+" and posttag.postID = posts.postID and categories.tagID = posttag.tagID;";
+        db.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log(JSON.stringify(result));
+            res.json(result)
+        });
+    } catch (err) {
+        res.send(err);
     }
 }
