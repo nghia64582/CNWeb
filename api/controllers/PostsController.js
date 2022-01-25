@@ -62,6 +62,7 @@ exports.createNewPost = async(req, res) => {
     }
 }
 
+<<<<<<< HEAD
 exports.deletePost = async(req, res) => {
     let data = req.body;
     try {
@@ -69,6 +70,45 @@ exports.deletePost = async(req, res) => {
         db.query(sql, function (err, result) {
             if (err) throw err;
             console.log("Post is deleted.");
+        });
+=======
+exports.addPostTag = async(req, res) => {
+    let data = req.params;
+    try{
+        let postID = data.postID;
+        let tagID = data.tagID;
+        sql = "insert into PostTag values (" + postID + "," + tagID + ")";
+        db.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log("Added to table.");
+        });
+        res.send("POST SUCCESSFUL");
+    } catch(err){
+        res.send(err);
+    }    
+}
+
+exports.deleteOnePost = async(req, res) => {
+    let data = req.params;
+    try{
+        const postID = data.postID;
+        const sql = "delete from posts where "+postID+" = postID;";
+        res.send("DELETE SUCCESSFUL");
+>>>>>>> 124a2070b1f6adc680b751c300efa63bd6fc78a9
+    } catch (err) {
+        res.send(err);
+    }
+}
+
+exports.getTagsPost = async(req, res) => {
+    let data = req.params;
+    try{
+        const postid = data.postID;
+        const sql = "select categories.tagName, posts.postID from categories, posts, posttag where posttag.postID = "+postid+" and posttag.postID = posts.postID and categories.tagID = posttag.tagID;";
+        db.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log(JSON.stringify(result));
+            res.json(result)
         });
     } catch (err) {
         res.send(err);
