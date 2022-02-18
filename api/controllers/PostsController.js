@@ -62,16 +62,6 @@ exports.createNewPost = async(req, res) => {
     }
 }
 
-<<<<<<< HEAD
-exports.deletePost = async(req, res) => {
-    let data = req.body;
-    try {
-        let sql = "DELETE FROM posts WHERE postID = " + data.postID;
-        db.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("Post is deleted.");
-        });
-=======
 exports.addPostTag = async(req, res) => {
     let data = req.params;
     try{
@@ -94,7 +84,6 @@ exports.deleteOnePost = async(req, res) => {
         const postID = data.postID;
         const sql = "delete from posts where "+postID+" = postID;";
         res.send("DELETE SUCCESSFUL");
->>>>>>> 124a2070b1f6adc680b751c300efa63bd6fc78a9
     } catch (err) {
         res.send(err);
     }
