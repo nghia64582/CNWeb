@@ -4,7 +4,7 @@ const db = require('../db');
 
 exports.getItem = async (req, res) => {
     try {
-        const data = req.params;
+        const data = req.query;
         let tag_id = data.tagID;
         const sql = "select * from categories where categories.tagID = '"+tag_id+"';";
         db.query(sql, function(err, result){
@@ -51,17 +51,18 @@ exports.createNewTag = async(req, res) => {
         const sql = "insert into Categories (tagName) values ('" + data.tagName + "');";
         db.query(sql, function (err, result) {
             if (err) throw err;
+            res.json({data: result.insertId});
             console.log("Added to table.");
         });
         console.log(sql);
-        res.send("POST SUCCESSFUL");
+        // res.send("POST SUCCESSFUL");
     } catch(err){
         res.send(err);
     }
 }
 
 exports.deleteOneTag = async (req, res) => {
-    let data = req.paramss;
+    let data = req.params;
     try{
         const tagID = data.tagID;
         const sql = "DELETE FROM posttag where tagID = "+tagID+"; delete from categories where tagID = "+tagID+";";

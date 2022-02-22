@@ -4,20 +4,36 @@ const db = require('../db');
 
 exports.getItem = async (req, res) => {
     try {
-        const data = req.params;
+        const data = req.body;
         let post_id = data.postID;
-        const sql = "select * from posts where posts.postID = '"+post_id+"';";
+        const sql = "select * from posts, categories, posttag where posts.postID = '"+post_id+"' and posts.postID = posttag.postID and posttag.tagID = categories.tagID;";
+        console.log(sql);
         db.query(sql, function(err, result){
             if(err) throw err;
             console.log(JSON.stringify(result));
             res.json(result);
         });
+
     }catch (err) {
         res.send(err)
     }
 }
 
-exports.getAll = async(req,res) => {
+exports.getAllPostsHasTag = async(req, res) => {
+    try{
+        const sql = "select * from posts, categories, posttag where posts.postID = posttag.postID and posttag.tagID = categories.tagID;";
+        console.log(sql);
+        db.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log(JSON.stringify(result));
+            res.json(result)
+        });
+    } catch (err) {
+        res.send(err)
+    }    
+}
+
+exports.getAll = async(req, res) => {
     try{
         const sql = "select * from posts";
         db.query(sql, function (err, result) {
@@ -27,7 +43,7 @@ exports.getAll = async(req,res) => {
         });
     } catch (err) {
         res.send(err)
-    }    
+    } 
 }
 
 function getSlug(str) {
@@ -54,16 +70,17 @@ exports.createNewPost = async(req, res) => {
             + "', '" + title + "', '" + content + "', '" + slug + "');"
         db.query(sql, function (err, result) {
             if (err) throw err;
+            res.json({data: result.insertId});
             console.log("Added to table.");
         });
-        res.send("POST SUCCESSFUL");
+        // res.send("POST SUCCESSFUL");
     } catch(err){
         res.send(err);
     }
 }
 
 exports.addPostTag = async(req, res) => {
-    let data = req.params;
+    let data = req.body;
     try{
         let postID = data.postID;
         let tagID = data.tagID;
@@ -83,6 +100,9 @@ exports.deleteOnePost = async(req, res) => {
     try{
         const postID = data.postID;
         const sql = "delete from posts where "+postID+" = postID;";
+        db.query(sql, function (err, result) {
+            if (err) throw err;
+        });
         res.send("DELETE SUCCESSFUL");
     } catch (err) {
         res.send(err);
