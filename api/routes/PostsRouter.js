@@ -4,10 +4,10 @@ const ratingCtrler = require('../controllers/RatingController');
 const { Router } = require("express");
 
 const router = Router();
-
+router.get('/postsHasTag', postsCtrler.getAllPostsHasTag);
 router.get('/:postID', postsCtrler.getItem);
 router.get('/', postsCtrler.getAll);
-router.get('/postsHasTag', postsCtrler.getAllPostsHasTag);
+
 router.post('/create',postsCtrler.createNewPost);
 router.delete('/:postID/delete', postsCtrler.deleteOnePost);
 router.post('/:postID/add-tag', postsCtrler.addPostTag);

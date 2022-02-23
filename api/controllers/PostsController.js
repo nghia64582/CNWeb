@@ -22,10 +22,10 @@ exports.getItem = async (req, res) => {
 exports.getAllPostsHasTag = async(req, res) => {
     try{
         const sql = "select * from posts, categories, posttag where posts.postID = posttag.postID and posttag.tagID = categories.tagID;";
-        console.log(sql);
+        // console.log(sql);
         db.query(sql, function (err, result) {
             if (err) throw err;
-            console.log(JSON.stringify(result));
+            // console.log(JSON.stringify(result));
             res.json(result)
         });
     } catch (err) {
